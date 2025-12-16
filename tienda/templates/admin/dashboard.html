@@ -63,8 +63,9 @@
             <h2>Productos Disponibles</h2>
             <div class="header-actions">
                 <div class="user-btn">
-                    <a href="{% url 'mi_perfil' %}" class="user-btn"></a>
-                    <i class="fas fa-user"></i> {{ user.username }}
+                    <a href="{% url 'mi_perfil' %}" class="user-btn-a">
+                        <i class="fas fa-user"></i> {{ user.username }}
+                    </a>
                 </div>
             </div>
         </header>
@@ -184,7 +185,7 @@
 }
 
 /*botones de  carrito  y usuario*/
-.user-btn {
+.user-btn-a {
     background:white;
     border: 2px solid #f9f9f9;
     color:black;
@@ -198,12 +199,13 @@
     cursor: pointer;
 }
 /*botones de  carrito  y usuario*/
-.cart-btn:hover, .user-btn:hover {
+.user-btn-a:hover {
     background: #00c0ff;
     border-color: white;
     color: #f9f9f9;
     transform: translateY(-2px);
     font-weight: 500;
+    text-decoration: none;
 }
 /* Filtro de categoría */
 .category-filter {
