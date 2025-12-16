@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Agregar/Actualizar Producto</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Nombre del Producto</label>
+            {{ form.nombre }}
+        </div>
+        <div class="form-group">
+            <label>Tipo de Producto</label>
+            {{ form.categoria }}
+        </div>
+        <div class="form-group">
+            <label>Categoría</label>
+            {{ form.categoria }}
+        </div>
+        <div class="form-group">
+            <label>Stock Inicial</label>
+            {{ form.cantidad }}
+        </div>
+        <div class="form-group">
+            <label>Fecha de Vencimiento</label>
+            {{ form.fecha_vencimiento }}
+        </div>
+        <div class="form-group">
+            <label>Imagen del Producto (opcional)</label>
+            {{ form.imagen }}
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Producto</button>
+        <a href="{% url 'dashboard_almacenero' %}" class="btn btn-secondary">Ver Productos Existentes</a>
+    </form>
+</div>
+<style>
+    
+    .container {
+        margin-top: 30px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h2{
+        text-align: center;
+        color: #00c0ff;
+        margin-bottom: 20px;
+        }
+    .form-group {
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+.form-control{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;    
+}
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        font-size: 20px;
+    }
+    .btn-primary,.btn-secondary{
+        background-color: #00c0ff;
+        border-color: #00c0ff;
+        color: white;
+        border-radius: 8px;
+        margin-top: 10px;
+        margin-left: 40px;
+        width: 40%;
+        padding: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        text-decoration: none;
+        text-align: center;
+        font-size: 20px;
+    }
+    .btn-primary:hover,.btn-secondary:hover{
+        background: #f9f9f9;
+        color:#00c0ff;
+        border: 2px solid #00c0ff;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}

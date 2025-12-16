@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="logo">MultiTiendas</h1>
+    <div class="login-card">
+        <h2>Inicio de Sesión</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Usuario</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn-login">Iniciar Sesión</button>
+            <div class="links">
+                <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a><br>
+                <a href="{% url 'register' %}">¿No tienes cuenta? Regístrate</a>
+            </div>
+            
+        </form>
+    </div>
+
+    <div class="footer-text">
+        <p><br> Tu tienda donde todo lo puedes encontrar, ahora más eficiente.,<br></p>
+        <p>Descubre desde electrónica básica y artículos para el hogar, hasta juguetes, papelería y los regalos más originales.</p>
+        <p class="cta">¡Visítanos y encuentra lo que necesitas!</p>
+    </div>
+</div>
+<style>
+
+    .container{
+        background-image: url("/static/images/default.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+    
+
+    .logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0px;
+        padding: 20px 0;
+        color: #00c0ff;
+        font-size: 100px;
+        font-weight: bold;
+    }
+    h2{
+        text-align: center;
+        color: #00c0ff;
+        margin-bottom: 20px;
+    }
+    .btn-login{
+        border-radius: 8px;
+        width: 60%;
+        margin: 8px auto 20px auto;
+        display: block;
+        background-color: #00c0ff;
+        border-color: #00c0ff;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s;
+        padding: 15px;
+    }
+    .links {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.links a {
+    text-decoration: none;
+    margin:  5px;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+    .links {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 5px;
+}
+    .login-card  {
+        margin-top: 0;
+        max-width: 450px;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+    }
+    .footer-text {
+    margin-top: 0;
+    padding: 0;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #222;
+    text-align: center;
+}
+
+.footer-text .cta {
+    color: var(--primary);
+    font-weight: bold;
+    margin-top: 10px;
+}
+.form-group {
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-align: left;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 15px 15px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+</style>
+{% endblock %}

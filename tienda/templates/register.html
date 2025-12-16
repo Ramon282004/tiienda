@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Registrar Cuenta - MultiTiendas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-card">
+        <h2>Crear Cuenta</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <h5>Por favor, corrige los siguientes errores:</h5>
+                <ul class="mb-0">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Nombre Completo</label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}<div class="text-danger">{{ form.nombre.errors }}</div>{% endif %}
+            </div>
+            <div class="form-group">
+                <label>Nombre de Usuario</label>
+                {{ form.username }}
+                {% if form.username.errors %}<div class="text-danger">{{ form.username.errors }}</div>{% endif %}
+            </div>
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                {{ form.email }}
+                {% if form.email.errors %}<div class="text-danger">{{ form.email.errors }}</div>{% endif %}
+            </div>
+            
+            <!-- 🔒 Campo de contraseña con indicador -->
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="id_password"
+                    class="form-control"
+                    required
+                >
+                <!-- Indicador de fortaleza -->
+                <div class="password-strength mt-2">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <div class="strength-label" id="strength-label">Vacía</div>
+                </div>
+                <small class="form-text text-muted">
+                    Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 carácter especial (@, #, $, %, &).
+                </small>
+                {% if form.password.errors %}<div class="text-danger mt-1">{{ form.password.errors }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Confirmar Contraseña</label>
+                {{ form.password_confirm }}
+                {% if form.password_confirm.errors %}<div class="text-danger">{{ form.password_confirm.errors }}</div>{% endif %}
+            </div>
+
+            <button type="submit" class="btn-login">Registrarse</button>
+        </form>
+
+        <div class="links">
+            ¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos del indicador (parte del diseño del registro) -->
+<style>
+    .container{
+        background-image: url("/static/images/default.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    /* Usar un diseño amplio y con fondo claro para legibilidad */
+    .login-card  {
+        margin-top: 0;
+        max-width: 420px; /* reducido para formulario más pequeño */
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        background: rgba(255,255,255,0.98);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        padding: 24px; /* padding reducido */
+    }
+
+    h2{
+        text-align: center;
+        color: #00c0ff;
+        margin-bottom: 14px;
+        font-size: 2rem;
+    }
+    .btn-login{
+        border-radius: 8px;
+        width: 60%;
+        margin: 8px auto 20px auto;
+        display: block;
+        background-color: #00c0ff;
+        border-color: #00c0ff;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s;
+        padding: 20px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+       .links {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+    /* Los estilos de los campos (labels, inputs, focus) se manejan en static/css/style.css
+       para mantenerlos consistentes con el login. Aquí solo dejamos el espaciado mínimo local. */
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .password-strength {
+        width: 100%;
+    }
+    .strength-bar {
+        width: 100%;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 5px;
+    }
+    .strength-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 4px;
+        transition: width 0.3s, background-color 0.3s;
+    }
+    .strength-label {
+        font-size: 0.85rem;
+        margin-top: 5px;
+        font-weight: 500;
+    }
+    .strength-fill-weak { background-color: #e74c3c; }       /* Rojo */
+    .strength-fill-medium { background-color: #f39c12; }    /* Naranja */
+    .strength-fill-strong { background-color: #2ecc71; }    /* Verde */
+</style>
+
+<!-- Script del indicador -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('id_password');
+    const strengthFill = document.getElementById('strength-fill');
+    const strengthLabel = document.getElementById('strength-label');
+
+    if (!passwordInput) return;
+
+    passwordInput.addEventListener('input', function() {
+        const password = passwordInput.value;
+        let score = 0;
+
+        // 1. Longitud ≥ 8
+        if (password.length >= 8) score += 25;
+        
+        // 2. Mayúscula
+        if (/[A-Z]/.test(password)) score += 25;
+        
+        // 3. Número
+        if (/\d/.test(password)) score += 25;
+        
+        // 4. Carácter especial
+        if (/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/.test(password)) score += 25;
+
+        // Actualizar barra
+        strengthFill.style.width = score + '%';
+        strengthFill.className = 'strength-fill';
+        
+        // Etiqueta y color
+        if (score < 50) {
+            strengthFill.classList.add('strength-fill-weak');
+            strengthLabel.textContent = password ? 'Débil' : 'Vacía';
+            strengthLabel.style.color = '#e74c3c';
+        } else if (score < 100) {
+            strengthFill.classList.add('strength-fill-medium');
+            strengthLabel.textContent = 'Media';
+            strengthLabel.style.color = '#f39c12';
+        } else {
+            strengthFill.classList.add('strength-fill-strong');
+            strengthLabel.textContent = '✅ Fuerte';
+            strengthLabel.style.color = '#2ecc71';
+        }
+    });
+});
+</script>
+{% endblock %}

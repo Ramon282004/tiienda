@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle de Orden #{{ orden.id }}</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Fecha:</strong> {{ orden.fecha|date:"d \d\e F \d\e Y \a \l\a\s H:i" }}</p>
+            <p><strong>Estado:</strong> 
+                <span class="badge bg-success">{{ orden.get_estado_display }}</span>
+            </p>
+            <p><strong>Total:</strong> <strong>S/ {{ orden.total }}</strong></p>
+        </div>
+    </div>
+
+    <h4> Productos:</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unit.</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in orden.items.all %}
+                <tr>
+                    <td>{{ item.producto_nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>S/ {{ item.precio_unitario }}</td>
+                    <td>S/ {{ item.subtotal }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3"><strong>Total Final</strong></td>
+                <td><strong>S/ {{ orden.total }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="mt-3">
+        <a href="{% url 'pdf_orden' orden.id %}" class="btn btn-outline-secondary" target="_blank">
+             Descargar PDF
+        </a>
+        <a href="{% url 'historial_compras' %}" class="btn btn-outline-secondary"> Volver</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Seguir comprando</a>
+    </div>
+</div>
+<style>
+    .mt-4 {
+        margin: 40px auto; /* centra horizontalmente */
+        width: 90%;
+        max-width: 920px; /* limitar ancho para centrar mejor */
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        background: white;
+        padding: 32px;
+    }
+h2{
+        text-align: center;
+        color: #00c0ff;
+        margin-bottom: 20px;
+    }
+    .card-body {
+        font-size: 20px;
+        color: #333;
+    }
+    .badge {
+    background-color:  #00c0ff;
+    color: white;
+    border-radius: 8px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+h4{
+        text-align: center;
+        color: #00c0ff;
+        margin-bottom: 20px;
+        font-size: 20px
+    }
+    .table{
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow)
+    }
+    .mt-3 {
+        max-width: 1500px;
+        margin: 25px auto 20px auto;
+        text-align: center;
+        font-size: 1.1rem; /* texto ligeramente más grande */
+    }
+    .btn-primary , .btn-outline-secondary {
+        border-radius: 8px;
+        background-color: #00c0ff;
+        border-color: #00c0ff;
+        color: white;
+        width: 200px;
+        padding: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+    .btn-primary:hover, .btn-outline-secondary:hover {
+        text-decoration: none;
+    }
+ td{
+        display:table-cell;
+        vertical-align: inherit;
+        box-sizing: border-box;
+        padding: 5px;
+    }
+    .table-striped {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+</style>
+{% endblock %}

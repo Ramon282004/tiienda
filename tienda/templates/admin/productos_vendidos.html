@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Productos Vendidos - MultiTiendas{% endblock %}
+{% block body_class %}admin-dashboard{% endblock %}
+
+{% block content %}
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>MultiTiendas</h2>
+            <p>Sistema de gestión</p>
+        </div>
+        <nav>
+            <div class="menu-item">
+                <span>Todos los Productos</span>
+               
+            </div>
+            <a href="{% url 'dashboard' %}" class="submenu-item">Ver Productos</a>
+
+            <div class="menu-item">
+                <span>Productos del Almacenero</span>
+                
+            </div>
+            <a href="{% url 'admin_productos_sin_precio' %}" class="submenu-item">Asignar Precios</a>
+
+            <div class="menu-item">
+                <span>Ver Productos Vendidos</span>
+               
+            </div>
+            <a href="{% url 'admin_productos_vendidos' %}" class="submenu-item active">Resumen por Fecha</a>
+
+            <div class="menu-item">
+                <span>Gestión de Usuarios</span>
+               
+            </div>
+            <a href="{% url 'admin_gestion_usuarios' %}" class="submenu-item">Administrar Usuarios</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <h2>Productos Vendidos</h2>
+            <div class="filter-box">
+                <form method="get">
+                    <label>Filtrar por fecha:</label>
+                    <input type="date" name="fecha" value="{{ fecha }}" class="form-control" style="width: auto;">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <a href="{% url 'admin_productos_vendidos' %}" class="btn btn-secondary">Limpiar</a>
+                    <a href="{% url 'admin_exportar_csv' %}?fecha={{ fecha }}" class="btn btn-info">Exportar a CSV</a>
+                </form>
+            </div>
+             
+             <div class="header-actions">
+                <div class="user-btn">
+                    <span>👤 {{ user.username }}</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="products-section">
+            
+
+            {% if items %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Tipo</th>
+                            <th>Cantidad Total</th>
+                            <th>Precio Unitario</th>
+                            <th>Importe Total</th>
+                            <th>Última Venta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>{{ item.nombre }}</td>
+                                <td>{{ item.categoria }}</td>
+                                <td>{{ item.tipo }}</td>
+                                <td>{{ item.cantidad_total }}</td>
+                                <td>S/ {{ item.precio_unitario }}</td>
+                                <td class="text-danger">S/ {{ item.importe_total }}</td>
+                                <td>{{ item.ultima_venta|date:"m/d/Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>TOTALES:</strong></td>
+                            <td><strong>{{ total_cantidad }}</strong></td>
+                            <td></td>
+                            <td><strong>S/ {{ total_importe }}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            {% else %}
+                <div class="alert alert-info">No se encontraron ventas para esta fecha.</div>
+            {% endif %}
+        </section>
+    </main>
+</div>
+<style>
+    .main-content {
+    position: relative;;
+    overflow-y: auto;
+    padding: 20px;
+    margin-left: 270px; /* Ancho del sidebar */
+    background: #f9f9f9;
+    min-height: 100vh;
+}
+/* Barra lateral */
+.sidebar {
+    width: 270px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+}
+h2{
+        text-align: center;
+        color:white;
+
+    }
+
+.sidebar .brand h2 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    color: white;
+    text-align: center;
+}
+.sidebar .brand p {
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Header  me superior */
+.header {
+    margin-top: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:   #00c0ff;
+    padding: 20px 30px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+}
+
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.menu-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin: 5px 0;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    transition: background 0.2s;
+    font-size: 20px;
+}
+.menu-item:hover {
+    background: rgb(255, 255, 255);
+    color: #00c0ff;
+}
+.filter-box {
+    background: white;
+    padding: 5px;
+    border-radius: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}   
+.form-control {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: auto;
+    margin-right: 10px;
+}          
+ .btn-secondary , .btn-info {
+    border-radius: 8px;
+    background-color: #00c0ff;
+    border-color: #00c0ff;
+    color: white;
+    width: auto;
+    padding: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-decoration: none;
+    margin-right: 10px;     
+}
+.btn-primary {
+    border-radius: 8px;
+    background-color: #00c0ff;
+    border-color: #00c0ff;
+    color: white;
+    width: auto;
+    padding: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-decoration: none;
+    margin-right: 10px;     
+}
+.btn-secondary:hover, .btn-info:hover, .btn-primary:hover {
+    background:white;
+    border: 2px solid  #00c0ff;
+    color: #00c0ff;
+    text-decoration: none;
+    
+}
+.user-btn {
+    background:white;
+    border: 2px solid #f9f9f9;
+    color:black;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+/*boton usuario*/
+.user-btn:hover {
+    background: #00c0ff;
+    border-color: white;
+    color: #f9f9f9;
+    transform: translateY(-2px);
+    font-weight: 500;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.table td, .table th {
+    vertical-align: middle;
+    padding: 12px;
+}
+</style>
+{% endblock %}

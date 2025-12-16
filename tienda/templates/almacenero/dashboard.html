@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Almacén - MultiTiendas{% endblock %}
+{% block body_class %}almacenero-dashboard{% endblock %}
+
+{% block content %}
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>MultiTiendas</h2>
+            <p>Sistema de gestión</p>
+        </div>
+        <nav>
+            <div class="menu-item-toggle" onclick="this.nextElementSibling.classList.toggle('expanded'); this.querySelector('.arrow').classList.toggle('rotated')">
+                <span>Productos en Almacén</span>
+               
+            </div>
+            <div class="submenu">
+                <a href="{% url 'agregar_producto_almacenero' %}" class="submenu-item">Agregar Producto</a>
+                <a href="{% url 'dashboard_almacenero' %}" class="submenu-item">Ver Productos Agregados</a>
+            </div>
+
+            <div class="menu-item-toggle" onclick="this.nextElementSibling.classList.toggle('expanded'); this.querySelector('.arrow').classList.toggle('rotated')">
+                <span>Mi Cuenta</span>
+                
+            </div>
+            <div class="submenu">
+                <a href="{% url 'mi_perfil' %}" class="submenu-item">Mi Perfil</a>
+                <a href="{% url 'logout' %}" class="submenu-item">Cerrar Sesión</a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- HEADER -->
+        <header class="header">
+            <h2>Productos en Almacén</h2>
+            <div class="header-actions">
+                <a href="{% url 'agregar_producto_almacenero' %}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Agregar Producto
+                </a>
+                <a href="{% url 'mi_perfil' %}" class="user-btn">
+                <i class="fas fa-user"></i> {{ user.username }}
+                </a>
+            </div>
+        </header>
+
+        <!-- LISTA DE PRODUCTOS -->
+        <section class="products-section">
+            {% if productos %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Tipo</th>
+                            <th>Categoría</th>
+                            <th>Stock</th>
+                            <th>Vencimiento</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                            <tr>
+                                <td>
+                                    {% if producto.imagen %}
+                                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px; border-radius: 4px;">
+                                    {% else %}
+                                        <div style="width: 50px; height: 50px; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 4px;">📷</div>
+                                    {% endif %}
+                                    <strong>{{ producto.nombre }}</strong>
+                                </td>
+                                <td>{{ producto.categoria.nombre }}</td>
+                                <td>
+                                    {% if producto.categoria.padre %}
+                                        {{ producto.categoria.padre.nombre }}
+                                    {% else %}
+                                        {{ producto.categoria.nombre }}
+                                    {% endif %}
+                                </td>
+                                <td class="stock-cell">
+                                    <i class="fas fa-check-circle" style="color: #27ae60;"></i> 
+                                    <span style="font-weight: 500; color: #27ae60;">{{ producto.cantidad }}</span>
+                                </td>
+                                <td class="vencimiento-cell">
+                                    {% if producto.fecha_vencimiento %}
+                                        <i class="fas fa-clock" style="color: #e74c3c;"></i> 
+                                        <span style="font-weight: 500; color: #e74c3c;">{{ producto.fecha_vencimiento|date:"d/m/Y" }}</span>
+                                    {% else %}
+                                        <i class="fas fa-infinity" style="color: #95a5a6;"></i> 
+                                        <span style="color: #95a5a6;">Sin vencimiento</span>
+                                    {% endif %}
+                                </td>
+                                <td class="precio-cell">
+                                    {% if producto.precio %}
+                                        <span style="font-weight: 500; color: #2980b9;">S/ {{ producto.precio|floatformat:2 }}</span>
+                                    {% else %}
+                                        <span style="font-weight: 500; color: #f39c12;">Sin asignar</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'editar_producto_almacenero' producto.id %}" class="btn btn-sm btn-dark">Editar</a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-warehouse"></i> No hay productos en el almacén.
+                    <br>
+                    <a href="{% url 'agregar_producto_almacenero' %}" class="btn btn-primary mt-2">
+                    Agregar Producto
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</div>
+
+<!-- Estilos específicos -->
+<style>
+      .main-content {
+    position: relative;;
+    overflow-y: auto;
+    padding: 20px;
+    margin-left: 270px; /* Ancho del sidebar */
+    background: #f9f9f9;
+    min-height: 100vh;
+}
+/* Barra lateral */
+.sidebar {
+    width: 270px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+}
+.sidebar .brand h2 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    color: white;
+    text-align: center;
+}
+.sidebar .brand p {
+    font-size: 1rem;
+    text-align: center;
+}
+.sidebar nav .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    margin: 5px 0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 20px;
+
+}
+/* Header  me superior */
+.header {
+    margin-top: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:   #00c0ff;
+    padding: 20px 30px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+}
+h2{
+        text-align: center;
+        color: white;
+        margin-bottom: 0px;
+        font-size: 2rem;
+    }
+
+/*botones de  carrito  y usuario*/
+.btn-success, .user-btn {
+    background:white;
+    border: 2px solid #f9f9f9;
+    color:black;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+/*botones de  carrito  y usuario*/
+.btn-success:hover, .user-btn:hover {
+    background: #00c0ff;
+    border-color: white;
+    color: #f9f9f9;
+    transform: translateY(-2px);
+    font-weight: 500;
+}
+/* Filtro de categoría */
+.category-filter {
+    background:white;
+    border: 2px solid #f9f9f9;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    gap: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 350px;
+}
+/* Estilos para el select */
+.category-filter select {
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+/*buscar algo*/
+.search-box {
+    background:white;
+    border: 2px solid #f9f9f9;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: flex;
+    gap: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+/* Botón Buscar */
+.btn-dark {
+    background-color: #00c0ff;
+    border-color: #00c0ff;
+    color: white;
+    border-radius: 20px;
+    padding: 6px 10px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: transform 0.2s;
+    text-decoration: none;
+}
+.form-control {
+     outline: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: rgba(0,0,0,0.05);
+}
+.submenu.expanded {
+    max-height: 300px;
+}
+.menu-item-toggle {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin: 5px 0;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    transition: background 0.2s;
+    font-size: 20px;
+}
+.menu-item-toggle:hover {
+    background: rgb(255, 255, 255);
+    color: #00c0ff;
+}
+.products-section h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+    margin-left: 30px;
+    font-size: 30px;
+}
+.table-striped {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.table td, .table th {
+    vertical-align: middle;
+    padding: 12px;
+}
+
+.stock-badge {
+    background: #2ecc71;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.vencimiento-badge {
+    background: #e74c3c;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.precio-sin-asignar {
+    background: #fff8e1;
+    color: #e65100;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-block;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+{% endblock %}
