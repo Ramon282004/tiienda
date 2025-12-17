@@ -14,7 +14,6 @@
         <nav>
             <div class="menu-item">
                 <span>Todos los Productos</span>
-               
             </div>
             <a href="{% url 'dashboard' %}" class="submenu-item">Ver Productos</a>
 
@@ -26,13 +25,11 @@
 
             <div class="menu-item">
                 <span>Ver Productos Vendidos</span>
-               
             </div>
             <a href="{% url 'admin_productos_vendidos' %}" class="submenu-item active">Resumen por Fecha</a>
 
             <div class="menu-item">
                 <span>Gestión de Usuarios</span>
-               
             </div>
             <a href="{% url 'admin_gestion_usuarios' %}" class="submenu-item">Administrar Usuarios</a>
         </nav>
@@ -50,10 +47,11 @@
                     <a href="{% url 'admin_exportar_csv' %}?fecha={{ fecha }}" class="btn btn-info">Exportar a CSV</a>
                 </form>
             </div>
-             
-             <div class="header-actions">
+            <div class="header-actions">
                 <div class="user-btn">
-                    <span>👤 {{ user.username }}</span>
+                    <a href="{% url 'mi_perfil' %}" class="user-btn-a">
+                        <i class="fas fa-user"></i> {{ user.username }}
+                    </a>
                 </div>
             </div>
         </header>
@@ -225,7 +223,7 @@ h2{
     text-decoration: none;
     
 }
-.user-btn {
+.user-btn-a {
     background:white;
     border: 2px solid #f9f9f9;
     color:black;
@@ -238,14 +236,16 @@ h2{
     font-weight: 500;
     cursor: pointer;
 }
-/*boton usuario*/
-.user-btn:hover {
+/*botones de  carrito  y usuario*/
+.user-btn-a:hover {
     background: #00c0ff;
     border-color: white;
     color: #f9f9f9;
     transform: translateY(-2px);
     font-weight: 500;
+    text-decoration: none;
 }
+/* Tabla de productos */
 .table {
     width: 100%;
     border-collapse: collapse;

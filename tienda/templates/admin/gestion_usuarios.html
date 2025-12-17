@@ -48,9 +48,13 @@
                 <a href="{% url 'admin_crear_usuario' %}" class="btn btn-success">
                     <i class="fas fa-plus"></i> Registrar Nuevo
                 </a>
+                <div class="header-actions">
                 <div class="user-btn">
-                    <span>👤 {{ user.username }}</span>
+                    <a href="{% url 'mi_perfil' %}" class="user-btn-a">
+                        <i class="fas fa-user"></i> {{ user.username }}
+                    </a>
                 </div>
+            </div>
             </div>
         </header>
 
@@ -189,7 +193,7 @@
     margin-top: 5px;
 }   
 /*botones de  carrito  y usuario*/
-.btn-success, .user-btn {
+.btn-success, .user-btn-a {
     background:white;
     border: 2px solid #f9f9f9;
     color:black;
@@ -203,7 +207,7 @@
     cursor: pointer;
 }
 /*botones de  agregar  y usuario*/
-.btn-success:hover, .user-btn:hover {
+.btn-success:hover, .user-btn-a:hover {
     background: #00c0ff;
     border-color: white;
     color: #f9f9f9;
