@@ -15,7 +15,6 @@
         <nav>
             <div class="menu-item-toggle" onclick="this.nextElementSibling.classList.toggle('expanded'); this.querySelector('.arrow').classList.toggle('rotated')">
                 <span>Todos los Productos</span>
-               
             </div>
             <div class="submenu">
                 <a href="{% url 'dashboard' %}" class="submenu-item">Ver Productos</a>
@@ -181,6 +180,12 @@
     border-radius: 20px;
     margin-bottom: 10px;
     box-shadow: var(--shadow);
+}
+
+.header h2 {
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
 }
 
 /*botones de  carrito  y usuario*/
