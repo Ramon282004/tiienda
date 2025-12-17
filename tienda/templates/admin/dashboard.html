@@ -106,8 +106,7 @@
                                 <td><span class="badge-rol">{{ producto.cantidad }}</span></td>
                                 <td>S/ {{ producto.precio|floatformat:2 }}</td>
                                 <td>
-                                    <a href="{% url 'admin_productos_vendidos' %}?producto_id={{ producto.id }}" class="btn btn-sm btn-info">📊 Ver ventas</a>
-                                    <a href="{% url 'editar_producto_almacenero' producto.id %}" class="btn btn-sm btn-dark">✏️ Editar</a>
+                                    <a href="{% url 'admin_productos_vendidos' %}?producto_id={{ producto.id }}" class="btn btn-sm btn-info"> Ver ventas</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -118,7 +117,7 @@
                     <i class="fas fa-box-open"></i> No hay productos con precio asignado.
                     <br>
                     <a href="{% url 'admin_productos_sin_precio' %}" class="btn btn-primary mt-2">
-                         Asignar Precios
+                        Asignar Precios
                     </a>
                 </div>
             {% endif %}
@@ -256,7 +255,7 @@
     text-decoration: none;
 }
 .form-control {
-     outline: none;
+    outline: none;
     background: transparent;
     cursor: pointer;
     font-weight: 500;
@@ -294,13 +293,23 @@
     background: rgb(255, 255, 255);
     color: #00c0ff;
 }
+.table-striped {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
 .table td, .table th {
     vertical-align: middle;
     padding: 12px;
+    text-align: center;
 }
 
 .table img {
     border-radius: 4px;
+    align-items: center;
 }
 
 .badge-rol {
