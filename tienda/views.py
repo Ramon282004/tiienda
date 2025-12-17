@@ -224,7 +224,7 @@ def agregar_al_carrito(request, producto_id):
                 if not creado:
                     item.cantidad += cantidad
                     item.save()
-                messages.success(request, f"✅ {producto.nombre} añadido al carrito.")
+                messages.success(request, f" {producto.nombre} añadido al carrito.")
         except ValueError as e:
             messages.error(request, str(e))
         except Exception as e:
@@ -245,7 +245,7 @@ def quitar_del_carrito(request, item_id):
                 item.delete()
                 messages.success(
                     request,
-                    f"❌ {cantidad_quitada}x {producto_nombre} eliminado(s) del carrito."
+                    f" {cantidad_quitada}x {producto_nombre} eliminado(s) del carrito."
                 )
         except Exception as e:
             messages.error(request, "Error al quitar del carrito.")
@@ -297,7 +297,7 @@ def procesar_compra(request):
 
             carrito.items.all().delete()
 
-            messages.success(request, f"✅ ¡Compra realizada! Orden #{orden.id} generada.")
+            messages.success(request, f"¡Compra realizada! Orden #{orden.id} generada.")
             return redirect('detalle_orden', orden_id=orden.id)
 
     except Exception as e:
@@ -371,7 +371,7 @@ def agregar_producto_almacenero(request):
             producto.usuario = request.user
             producto.created_by = request.user
             producto.save()
-            messages.success(request, f"✅ Producto '{producto.nombre}' agregado al almacén.")
+            messages.success(request, f" Producto '{producto.nombre}' agregado al almacén.")
             return redirect('dashboard_almacenero')
     else:
         form = ProductoForm()
@@ -389,7 +389,7 @@ def editar_producto_almacenero(request, producto_id):
             producto = form.save(commit=False)
             producto.updated_by = request.user
             producto.save()
-            messages.success(request, "✅ Producto actualizado.")
+            messages.success(request, "Producto actualizado.")
             return redirect('dashboard_almacenero')
     else:
         form = ProductoForm(instance=producto)
@@ -425,7 +425,7 @@ def admin_asignar_precio(request, producto_id):
         try:
             producto.precio = Decimal(precio)
             producto.save()
-            messages.success(request, f"✅ Precio asignado a '{producto.nombre}': S/ {producto.precio}")
+            messages.success(request, f"Precio asignado a '{producto.nombre}': S/ {producto.precio}")
             return redirect('admin_productos_sin_precio')
         except Exception as e:
             messages.error(request, "Error al asignar precio. Asegúrate de usar formato decimal (ej: 24.00)")
@@ -529,7 +529,7 @@ def admin_crear_usuario(request):
                 )
                 grupo, _ = Group.objects.get_or_create(name=rol)
                 user.groups.add(grupo)
-                messages.success(request, f"✅ Usuario '{username}' creado como {rol}.")
+                messages.success(request, f" Usuario '{username}' creado como {rol}.")
                 return redirect('admin_gestion_usuarios')
             except Exception as e:
                 messages.error(request, f"Error al crear usuario: {str(e)}")
@@ -547,7 +547,7 @@ def admin_desactivar_usuario(request, user_id):
     else:
         user.is_active = False
         user.save()
-        messages.success(request, f"✅ Usuario '{user.username}' desactivado.")
+        messages.success(request, f" Usuario '{user.username}' desactivado.")
     return redirect('admin_gestion_usuarios')
 
 
