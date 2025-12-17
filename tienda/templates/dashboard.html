@@ -26,7 +26,6 @@
             {% for categoria in categorias %}
                 <div class="menu-item-toggle" onclick="this.nextElementSibling.classList.toggle('expanded'); this.querySelector('.arrow').classList.toggle('rotated')">
                     <span>{{ categoria.nombre }}</span>
-                   
                 </div>
                 <div class="submenu">
                     {% for subcat in categoria.subcategorias.all %}
@@ -38,7 +37,6 @@
             <!-- Mi Cuenta -->
             <div class="menu-item-toggle" onclick="this.nextElementSibling.classList.toggle('expanded'); this.querySelector('.arrow').classList.toggle('rotated')">
                 <span>Mi Cuenta</span>
-               
             </div>
             <div class="submenu">
                 <a href="{% url 'mi_perfil' %}" class="submenu-item">Mi Perfil</a>
