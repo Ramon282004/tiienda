@@ -37,6 +37,19 @@
         <!-- HEADER -->
         <header class="header">
             <h2>Productos en Almacén</h2>
+
+            <form method="get" class="category-filter">
+                <label>Categoría:</label>
+                <select name="categoria" onchange="this.form.submit()">
+                    <option value="">Todas</option>
+                    {% for cat in categorias %}
+                        <option value="{{ cat.id }}" {% if categoria_seleccionada == cat.id|stringformat:"i" %}selected{% endif %}>
+                            {{ cat.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+            
             <div class="header-actions">
                 <a href="{% url 'agregar_producto_almacenero' %}" class="btn btn-success">
                     <i class="fas fa-plus"></i> Agregar Producto
@@ -124,7 +137,7 @@
 
 <!-- Estilos específicos -->
 <style>
-      .main-content {
+    .main-content {
     position: relative;;
     overflow-y: auto;
     padding: 20px;
@@ -219,7 +232,6 @@ h2{
     text-decoration: none;
     font-weight: 500;
     cursor: pointer;
-    margin-right: 350px;
 }
 /* Estilos para el select */
 .category-filter select {

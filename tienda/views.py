@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template
@@ -356,8 +357,37 @@ def generar_pdf_orden(request, orden_id):
 @login_required
 @user_passes_test(es_almacenero)
 def dashboard_almacenero(request):
-    productos = Producto.objects.all().order_by('-created_at')
-    return render(request, 'almacenero/dashboard.html', {'productos': productos})
+    q = request.GET.get('q', '').strip()
+    categoria_id = request.GET.get('categoria')
+
+    productos = Producto.objects.filter(usuario=request.user)
+
+    # Búsqueda
+    if q:
+        productos = productos.filter(
+            Q(nombre__icontains=q) | Q(descripcion__icontains=q)
+        )
+
+    # Filtro por categoría
+    if categoria_id:
+        try:
+            categoria = Categoria.objects.get(id=categoria_id)
+            if categoria.subcategorias.exists():
+                productos = productos.filter(categoria__in=categoria.subcategorias.all())
+            else:
+                productos = productos.filter(categoria_id=categoria_id)
+        except Categoria.DoesNotExist:
+            pass
+
+    productos = productos.order_by('-created_at')
+    categorias = Categoria.objects.filter(padre__isnull=True)
+
+    return render(request, 'almacenero/dashboard.html', {
+        'productos': productos,
+        'categorias': categorias,
+        'categoria_seleccionada': categoria_id,
+        'q': q,
+    })
 
 
 @login_required
